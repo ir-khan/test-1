@@ -52,7 +52,7 @@ class StudentsPage extends ConsumerWidget {
             heroTag: 'add_student_fab',
             onPressed: () => context.goNamed(
               AppRoutes.createStudent.name,
-              pathParameters: {AppParams.studentId: '-1'},
+              pathParameters: {AppParams.studentId: 'new'},
             ),
             child: Icon(Icons.add_rounded),
           ),

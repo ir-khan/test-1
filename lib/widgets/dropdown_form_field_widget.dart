@@ -5,12 +5,14 @@ class DropdownFormFieldWidget<T> extends StatelessWidget {
     super.key,
     this.initialValue,
     required this.items,
+    required this.itemLabel,
     required this.onChange,
     this.validator,
   });
 
   final T? initialValue;
-  final List<DropdownMenuItem<T>> items;
+  final List<T> items;
+  final String Function(T) itemLabel;
   final void Function(T?) onChange;
   final String? Function(T?)? validator;
 
@@ -23,7 +25,11 @@ class DropdownFormFieldWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
       initialValue: initialValue,
-      items: items,
+      items: items
+          .map((g) {
+            return DropdownMenuItem(value: g, child: Text(itemLabel(g)));
+          })
+          .toList(growable: false),
       onChanged: onChange,
       validator: validator,
       decoration: InputDecoration(

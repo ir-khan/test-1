@@ -23,9 +23,9 @@ class CreateStudentPage extends ConsumerStatefulWidget {
     BuildContext context,
     GoRouterState state, {
     super.key,
-  }) : id = int.tryParse(state.pathParameters[AppParams.studentId] ?? '');
+  }) : id = int.tryParse(state.pathParameters[AppParams.studentId] ?? '') ?? -1;
 
-  final int? id;
+  final int id;
 
   @override
   ConsumerState createState() => _CreateStudentPageState();
@@ -67,7 +67,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
   Widget build(BuildContext context) {
     final lang = AppLocalizations.of(context)!;
     final AsyncValue student = widget.id != -1
-        ? ref.watch(getStudentProvider(widget.id!))
+        ? ref.watch(getStudentProvider(widget.id))
         : AsyncData(null);
     return Scaffold(
       appBar: CustomAppBar(
@@ -80,7 +80,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
           AsyncLoading() => LoadingWidget(),
           AsyncError(:final error) => AppErrorWidget(
             error: error.toString(),
-            onRetry: () => ref.refresh(getStudentProvider(widget.id!)),
+            onRetry: () => ref.refresh(getStudentProvider(widget.id)),
           ),
           AsyncData(:final value) => () {
             if (value != null && _nameController.text.isEmpty) {
@@ -140,7 +140,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
               ? lang.updateStudentMessage
               : lang.createStudentMessage,
         ),
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 1500),
         margin: EdgeInsets.all(20),
         behavior: SnackBarBehavior.floating,
       ),
@@ -256,11 +256,8 @@ class StudentForm extends StatelessWidget {
             sliver: SliverToBoxAdapter(
               child: DropdownFormFieldWidget<Grade>(
                 initialValue: grade,
-                items: Grade.values
-                    .map((g) {
-                      return DropdownMenuItem(value: g, child: Text(g.value));
-                    })
-                    .toList(growable: false),
+                items: Grade.values,
+                itemLabel: (g) => g.value,
                 onChange: onGradeChange,
                 validator: (value) {
                   if (value == null || value == Grade.notGraded) {
