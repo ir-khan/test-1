@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../repository/student_repository.dart';
 
-
 part 'delete_student_provider.g.dart';
 
 @riverpod

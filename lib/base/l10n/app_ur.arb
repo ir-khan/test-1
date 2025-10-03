@@ -22,5 +22,9 @@
     "passed": "کامیاب",
     "failed": "کامیاب",
     "grade": "گریڈ",
-    "result": "نتیجہ"
+    "result": "نتیجہ",
+    "fatherName": "والد کا نام",
+    "fatherNameErrorMessage": "والد کا نام درج کریں۔",
+    "retry": "دوبارہ کوشش کریں",
+    "gradeErrorMessage": "کوئی بھی گریڈ منتخب کریں۔"
 }

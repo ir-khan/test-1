@@ -34,11 +34,11 @@ class Students extends Table with TableInfo<Students, StudentsData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  late final GeneratedColumn<double> marks = GeneratedColumn<double>(
+  late final GeneratedColumn<int> marks = GeneratedColumn<int>(
     'marks',
     aliasedName,
     false,
-    type: DriftSqlType.double,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   late final GeneratedColumn<bool> status = GeneratedColumn<bool>(
@@ -57,7 +57,15 @@ class Students extends Table with TableInfo<Students, StudentsData> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const CustomExpression('\'Not yet graded\''),
+    defaultValue: const CustomExpression('\'notGraded\''),
+  );
+  late final GeneratedColumn<String> fatherName = GeneratedColumn<String>(
+    'father_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const CustomExpression('\'\''),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -67,6 +75,7 @@ class Students extends Table with TableInfo<Students, StudentsData> {
     marks,
     status,
     grade,
+    fatherName,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -92,7 +101,7 @@ class Students extends Table with TableInfo<Students, StudentsData> {
         data['${effectivePrefix}name'],
       )!,
       marks: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
+        DriftSqlType.int,
         data['${effectivePrefix}marks'],
       )!,
       status: attachedDatabase.typeMapping.read(
@@ -102,6 +111,10 @@ class Students extends Table with TableInfo<Students, StudentsData> {
       grade: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}grade'],
+      )!,
+      fatherName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}father_name'],
       )!,
     );
   }
@@ -116,9 +129,10 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
   final int id;
   final DateTime createdAt;
   final String name;
-  final double marks;
+  final int marks;
   final bool status;
   final String grade;
+  final String fatherName;
   const StudentsData({
     required this.id,
     required this.createdAt,
@@ -126,6 +140,7 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
     required this.marks,
     required this.status,
     required this.grade,
+    required this.fatherName,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -133,9 +148,10 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['name'] = Variable<String>(name);
-    map['marks'] = Variable<double>(marks);
+    map['marks'] = Variable<int>(marks);
     map['status'] = Variable<bool>(status);
     map['grade'] = Variable<String>(grade);
+    map['father_name'] = Variable<String>(fatherName);
     return map;
   }
 
@@ -147,6 +163,7 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
       marks: Value(marks),
       status: Value(status),
       grade: Value(grade),
+      fatherName: Value(fatherName),
     );
   }
 
@@ -159,9 +176,10 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       name: serializer.fromJson<String>(json['name']),
-      marks: serializer.fromJson<double>(json['marks']),
+      marks: serializer.fromJson<int>(json['marks']),
       status: serializer.fromJson<bool>(json['status']),
       grade: serializer.fromJson<String>(json['grade']),
+      fatherName: serializer.fromJson<String>(json['fatherName']),
     );
   }
   @override
@@ -171,9 +189,10 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'name': serializer.toJson<String>(name),
-      'marks': serializer.toJson<double>(marks),
+      'marks': serializer.toJson<int>(marks),
       'status': serializer.toJson<bool>(status),
       'grade': serializer.toJson<String>(grade),
+      'fatherName': serializer.toJson<String>(fatherName),
     };
   }
 
@@ -181,9 +200,10 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
     int? id,
     DateTime? createdAt,
     String? name,
-    double? marks,
+    int? marks,
     bool? status,
     String? grade,
+    String? fatherName,
   }) => StudentsData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -191,6 +211,7 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
     marks: marks ?? this.marks,
     status: status ?? this.status,
     grade: grade ?? this.grade,
+    fatherName: fatherName ?? this.fatherName,
   );
   StudentsData copyWithCompanion(StudentsCompanion data) {
     return StudentsData(
@@ -200,6 +221,9 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
       marks: data.marks.present ? data.marks.value : this.marks,
       status: data.status.present ? data.status.value : this.status,
       grade: data.grade.present ? data.grade.value : this.grade,
+      fatherName: data.fatherName.present
+          ? data.fatherName.value
+          : this.fatherName,
     );
   }
 
@@ -211,13 +235,15 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
           ..write('name: $name, ')
           ..write('marks: $marks, ')
           ..write('status: $status, ')
-          ..write('grade: $grade')
+          ..write('grade: $grade, ')
+          ..write('fatherName: $fatherName')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, name, marks, status, grade);
+  int get hashCode =>
+      Object.hash(id, createdAt, name, marks, status, grade, fatherName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -227,16 +253,18 @@ class StudentsData extends DataClass implements Insertable<StudentsData> {
           other.name == this.name &&
           other.marks == this.marks &&
           other.status == this.status &&
-          other.grade == this.grade);
+          other.grade == this.grade &&
+          other.fatherName == this.fatherName);
 }
 
 class StudentsCompanion extends UpdateCompanion<StudentsData> {
   final Value<int> id;
   final Value<DateTime> createdAt;
   final Value<String> name;
-  final Value<double> marks;
+  final Value<int> marks;
   final Value<bool> status;
   final Value<String> grade;
+  final Value<String> fatherName;
   const StudentsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -244,14 +272,16 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
     this.marks = const Value.absent(),
     this.status = const Value.absent(),
     this.grade = const Value.absent(),
+    this.fatherName = const Value.absent(),
   });
   StudentsCompanion.insert({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     required String name,
-    required double marks,
+    required int marks,
     required bool status,
     this.grade = const Value.absent(),
+    this.fatherName = const Value.absent(),
   }) : name = Value(name),
        marks = Value(marks),
        status = Value(status);
@@ -259,9 +289,10 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<String>? name,
-    Expression<double>? marks,
+    Expression<int>? marks,
     Expression<bool>? status,
     Expression<String>? grade,
+    Expression<String>? fatherName,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -270,6 +301,7 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
       if (marks != null) 'marks': marks,
       if (status != null) 'status': status,
       if (grade != null) 'grade': grade,
+      if (fatherName != null) 'father_name': fatherName,
     });
   }
 
@@ -277,9 +309,10 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
     Value<int>? id,
     Value<DateTime>? createdAt,
     Value<String>? name,
-    Value<double>? marks,
+    Value<int>? marks,
     Value<bool>? status,
     Value<String>? grade,
+    Value<String>? fatherName,
   }) {
     return StudentsCompanion(
       id: id ?? this.id,
@@ -288,6 +321,7 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
       marks: marks ?? this.marks,
       status: status ?? this.status,
       grade: grade ?? this.grade,
+      fatherName: fatherName ?? this.fatherName,
     );
   }
 
@@ -304,13 +338,16 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
       map['name'] = Variable<String>(name.value);
     }
     if (marks.present) {
-      map['marks'] = Variable<double>(marks.value);
+      map['marks'] = Variable<int>(marks.value);
     }
     if (status.present) {
       map['status'] = Variable<bool>(status.value);
     }
     if (grade.present) {
       map['grade'] = Variable<String>(grade.value);
+    }
+    if (fatherName.present) {
+      map['father_name'] = Variable<String>(fatherName.value);
     }
     return map;
   }
@@ -323,7 +360,219 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
           ..write('name: $name, ')
           ..write('marks: $marks, ')
           ..write('status: $status, ')
-          ..write('grade: $grade')
+          ..write('grade: $grade, ')
+          ..write('fatherName: $fatherName')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Departments extends Table with TableInfo<Departments, DepartmentsData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Departments(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: const CustomExpression('CURRENT_TIMESTAMP'),
+  );
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, createdAt, name];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'departments';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DepartmentsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DepartmentsData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+    );
+  }
+
+  @override
+  Departments createAlias(String alias) {
+    return Departments(attachedDatabase, alias);
+  }
+}
+
+class DepartmentsData extends DataClass implements Insertable<DepartmentsData> {
+  final int id;
+  final DateTime createdAt;
+  final String name;
+  const DepartmentsData({
+    required this.id,
+    required this.createdAt,
+    required this.name,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['name'] = Variable<String>(name);
+    return map;
+  }
+
+  DepartmentsCompanion toCompanion(bool nullToAbsent) {
+    return DepartmentsCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      name: Value(name),
+    );
+  }
+
+  factory DepartmentsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DepartmentsData(
+      id: serializer.fromJson<int>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      name: serializer.fromJson<String>(json['name']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'name': serializer.toJson<String>(name),
+    };
+  }
+
+  DepartmentsData copyWith({int? id, DateTime? createdAt, String? name}) =>
+      DepartmentsData(
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        name: name ?? this.name,
+      );
+  DepartmentsData copyWithCompanion(DepartmentsCompanion data) {
+    return DepartmentsData(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      name: data.name.present ? data.name.value : this.name,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DepartmentsData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('name: $name')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, createdAt, name);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DepartmentsData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.name == this.name);
+}
+
+class DepartmentsCompanion extends UpdateCompanion<DepartmentsData> {
+  final Value<int> id;
+  final Value<DateTime> createdAt;
+  final Value<String> name;
+  const DepartmentsCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.name = const Value.absent(),
+  });
+  DepartmentsCompanion.insert({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    required String name,
+  }) : name = Value(name);
+  static Insertable<DepartmentsData> custom({
+    Expression<int>? id,
+    Expression<DateTime>? createdAt,
+    Expression<String>? name,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (name != null) 'name': name,
+    });
+  }
+
+  DepartmentsCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? createdAt,
+    Value<String>? name,
+  }) {
+    return DepartmentsCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      name: name ?? this.name,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DepartmentsCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('name: $name')
           ..write(')'))
         .toString();
   }
@@ -332,11 +581,12 @@ class StudentsCompanion extends UpdateCompanion<StudentsData> {
 class DatabaseAtV3 extends GeneratedDatabase {
   DatabaseAtV3(QueryExecutor e) : super(e);
   late final Students students = Students(this);
+  late final Departments departments = Departments(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [students];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [students, departments];
   @override
   int get schemaVersion => 3;
   @override

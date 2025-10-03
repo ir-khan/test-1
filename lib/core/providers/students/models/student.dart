@@ -10,12 +10,13 @@ abstract class Student with _$Student {
   const Student._();
 
   factory Student({
-    int? id,
+    final int? id,
     required final String name,
-    required final double marks,
+    required final int marks,
     required final bool status,
-    DateTime? createdAt,
+    final DateTime? createdAt,
     @Default(Grade.notGraded) final Grade grade,
+    required final String fatherName,
   }) = _Student;
 
   StudentDto toDto() {
@@ -26,6 +27,7 @@ abstract class Student with _$Student {
       status: status,
       createdAt: createdAt,
       grade: grade,
+      fatherName: fatherName,
     );
   }
 }

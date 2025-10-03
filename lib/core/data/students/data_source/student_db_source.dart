@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../../../../utils/enums.dart';
 import '../../../database/app_database.dart';
+import '../../../database/tables/students.dart';
 import '../dto/student_dto.dart';
 
 class StudentDbSource {
@@ -22,14 +23,7 @@ class StudentDbSource {
       final result = await (database.select(
         database.students,
       )..where((s) => s.id.equals(id))).getSingle();
-      return StudentDto(
-        id: result.id,
-        name: result.name,
-        marks: result.marks,
-        status: result.status,
-        createdAt: result.createdAt,
-        grade: result.grade,
-      );
+      return result.toDto();
     } catch (_) {
       rethrow;
     }
@@ -47,20 +41,7 @@ class StudentDbSource {
             ),
           ]))
           .watch()
-          .map(
-            (students) => students
-                .map(
-                  (s) => StudentDto(
-                    id: s.id,
-                    name: s.name,
-                    marks: s.marks,
-                    status: s.status,
-                    createdAt: s.createdAt,
-                    grade: s.grade,
-                  ),
-                )
-                .toList(),
-          );
+          .map((students) => students.map((s) => s.toDto()).toList());
     } catch (_) {
       rethrow;
     }
@@ -84,5 +65,19 @@ class StudentDbSource {
     } catch (_) {
       rethrow;
     }
+  }
+}
+
+extension StudentDTOConverter on Student {
+  StudentDto toDto() {
+    return StudentDto(
+      id: id,
+      name: name,
+      marks: marks,
+      status: status,
+      grade: grade,
+      fatherName: fatherName,
+      createdAt: createdAt,
+    );
   }
 }

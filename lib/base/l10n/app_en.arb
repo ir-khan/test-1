@@ -22,5 +22,9 @@
     "passed": "Passed",
     "failed": "Failed",
     "grade": "Grade",
-    "result": "Result"
+    "result": "Result",
+    "fatherName": "Father Name",
+    "fatherNameErrorMessage": "Enter father name.",
+    "retry": "Retry",
+    "gradeErrorMessage": "Select any grade."
 }

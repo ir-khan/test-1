@@ -6,7 +6,9 @@ import '../../../base/l10n/app_localizations.dart';
 import '../../../core/providers/students/models/student.dart';
 import '../../../core/providers/students/provider/get_student_provider.dart';
 import '../../../router/routes.dart';
+import '../../../widgets/app_error_widget.dart';
 import '../../../widgets/custom_app_bar.dart';
+import '../../../widgets/loading_widget.dart';
 
 class StudentDetailsPage extends ConsumerWidget {
   StudentDetailsPage.route(
@@ -24,7 +26,10 @@ class StudentDetailsPage extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(title: lang.studentDetails),
       body: switch (studentProvider) {
-        AsyncError(:final error) => Text('Error: $error'),
+        AsyncError(:final error) => AppErrorWidget(
+          error: error.toString(),
+          onRetry: () => ref.refresh(getStudentProvider(id)),
+        ),
         AsyncData<Student>(:final value) => () {
           return Padding(
             padding: const EdgeInsets.all(20.0),
@@ -32,6 +37,7 @@ class StudentDetailsPage extends ConsumerWidget {
               spacing: 10,
               children: [
                 DetailsRow(label: lang.name, value: value.name),
+                DetailsRow(label: lang.fatherName, value: value.fatherName),
                 DetailsRow(
                   label: lang.marks,
                   value: value.marks.toStringAsFixed(0),
@@ -45,7 +51,7 @@ class StudentDetailsPage extends ConsumerWidget {
             ),
           );
         }(),
-        AsyncLoading() || _ => Center(child: CircularProgressIndicator()),
+        AsyncLoading() || _ => LoadingWidget(),
       },
     );
   }

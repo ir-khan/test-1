@@ -1,20 +1,20 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../utils/enums.dart';
+import 'tables/departments.dart';
 import 'tables/students.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Students])
+@DriftDatabase(tables: [Students, Departments])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -35,6 +35,18 @@ class AppDatabase extends _$AppDatabase {
               },
             ),
           );
+        }
+        if (from < 3) {
+          await m.addColumn(students, students.fatherName);
+          await m.alterTable(
+            TableMigration(
+              students,
+              columnTransformer: {
+                students.marks: students.marks.cast<int>(),
+              },
+            ),
+          );
+          await m.createTable(departments);
         }
       },
     );

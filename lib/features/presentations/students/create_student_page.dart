@@ -11,8 +11,11 @@ import '../../../core/providers/students/provider/get_students_provider.dart';
 import '../../../core/providers/students/provider/update_student_provider.dart';
 import '../../../router/routes.dart';
 import '../../../utils/enums.dart';
+import '../../../widgets/app_error_widget.dart';
 import '../../../widgets/button.dart';
 import '../../../widgets/custom_app_bar.dart';
+import '../../../widgets/dropdown_form_field_widget.dart';
+import '../../../widgets/loading_widget.dart';
 import '../../../widgets/text_form_field_widget.dart';
 
 class CreateStudentPage extends ConsumerStatefulWidget {
@@ -32,6 +35,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _marksController;
+  late final TextEditingController _fatherNameController;
   AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
   bool _status = false;
   Grade _grade = Grade.notGraded;
@@ -41,11 +45,13 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
     super.initState();
     _nameController = TextEditingController();
     _marksController = TextEditingController();
+    _fatherNameController = TextEditingController();
   }
 
   void _prefillForm(Student student) {
     _nameController.text = student.name;
-    _marksController.text = student.marks.toStringAsFixed(0);
+    _marksController.text = student.marks.toString();
+    _fatherNameController.text = student.fatherName;
     _status = student.status;
     _grade = student.grade;
   }
@@ -71,13 +77,18 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
         key: _formKey,
         autovalidateMode: autoValidateMode,
         child: switch (student) {
-          /// Retry Mechanism is missing
-          AsyncError(:final error) => Text('Error: $error'),
+          AsyncError(:final error) => AppErrorWidget(
+            error: error.toString(),
+            onRetry: () => ref.refresh(getStudentProvider(widget.id!)),
+          ),
           AsyncData(:final value) => () {
-            if (value != null) _prefillForm(value);
+            if (value != null && _nameController.text.isEmpty) {
+              _prefillForm(value);
+            }
             return StudentForm(
               nameController: _nameController,
               marksController: _marksController,
+              fatherNameController: _fatherNameController,
               status: _status,
               onStatusChange: (value) {
                 _status = value;
@@ -93,7 +104,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
               isEditing: widget.id != -1,
             );
           }(),
-          AsyncLoading() || _ => Center(child: CircularProgressIndicator()),
+          AsyncLoading() || _ => LoadingWidget(),
         },
       ),
     );
@@ -109,9 +120,10 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
     final student = Student(
       id: widget.id == -1 ? null : widget.id,
       name: _nameController.text.trim(),
-      marks: double.parse(_marksController.text.trim()),
+      marks: int.parse(_marksController.text.trim()),
       status: _status,
       grade: _grade,
+      fatherName: _fatherNameController.text.trim(),
     );
 
     if (widget.id == -1) {
@@ -134,7 +146,9 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
       ),
     );
 
+    ref.invalidate(getStudentProvider);
     ref.invalidate(getStudentsProvider);
+
     context.pop();
   }
 }
@@ -144,6 +158,7 @@ class StudentForm extends StatelessWidget {
     super.key,
     required this.nameController,
     required this.marksController,
+    required this.fatherNameController,
     required this.status,
     required this.onStatusChange,
     required this.grade,
@@ -154,6 +169,7 @@ class StudentForm extends StatelessWidget {
 
   final TextEditingController nameController;
   final TextEditingController marksController;
+  final TextEditingController fatherNameController;
   final bool status;
   final void Function(bool) onStatusChange;
   final Grade grade;
@@ -208,6 +224,21 @@ class StudentForm extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             sliver: SliverToBoxAdapter(
+              child: TextFormFieldWidget(
+                controller: fatherNameController,
+                hintText: lang.fatherName,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return lang.fatherNameErrorMessage;
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            sliver: SliverToBoxAdapter(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -223,28 +254,20 @@ class StudentForm extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 10),
             sliver: SliverToBoxAdapter(
-              child: DropdownButtonFormField<Grade>(
+              child: DropdownFormFieldWidget<Grade>(
                 initialValue: grade,
                 items: Grade.values
                     .map((g) {
                       return DropdownMenuItem(value: g, child: Text(g.value));
                     })
                     .toList(growable: false),
-                onChanged: onGradeChange,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.limeAccent),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.limeAccent),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.limeAccent),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
+                onChange: onGradeChange,
+                validator: (value) {
+                  if (value == null || value == Grade.notGraded) {
+                    return lang.gradeErrorMessage;
+                  }
+                  return null;
+                },
               ),
             ),
           ),

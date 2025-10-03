@@ -14,20 +14,22 @@ abstract class StudentDto with _$StudentDto {
   const factory StudentDto({
     final int? id,
     required final String name,
-    required final double marks,
+    required final int marks,
     required final bool status,
     final DateTime? createdAt,
     required final Grade grade,
+    required final String fatherName,
   }) = _StudentDto;
 
   db.StudentsCompanion toSchema() {
     return db.StudentsCompanion(
-      id: (id == null ? Value.absent() : Value(id!)),
-      createdAt: (createdAt == null ? Value.absent() : Value(createdAt!)),
+      id: id == null ? Value.absent() : Value(id!),
+      createdAt: createdAt == null ? Value.absent() : Value(createdAt!),
       name: Value(name),
       marks: Value(marks),
       status: Value(status),
       grade: Value(grade),
+      fatherName: Value(fatherName),
     );
   }
 
@@ -39,6 +41,7 @@ abstract class StudentDto with _$StudentDto {
       status: status,
       createdAt: createdAt,
       grade: grade,
+      fatherName: fatherName,
     );
   }
 }
