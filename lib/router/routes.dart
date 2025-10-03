@@ -1,8 +1,7 @@
 enum AppRoutes {
   students('students', '/students'),
   studentDetails('student-details', ':${AppParams.studentId}'),
-  createStudent('create-student', 'add'),
-  editStudent('edit-student', 'edit/:${AppParams.studentId}');
+  createStudent('create-student', 'add/:${AppParams.studentId}');
 
   final String name;
   final String path;

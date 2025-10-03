@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class LocaleNotifier extends Notifier<Locale> {
+part 'locale_provider.g.dart';
+
+@riverpod
+class CurrentLocale extends _$CurrentLocale {
   @override
   Locale build() {
-    return const Locale('en');
+    return Locale('en');
   }
 
   void setLocale(Locale newLocale) {
     state = newLocale;
   }
 }
-
-final localeProvider = NotifierProvider<LocaleNotifier, Locale>(
-  LocaleNotifier.new,
-);

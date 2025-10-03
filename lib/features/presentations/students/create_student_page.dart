@@ -60,30 +60,28 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
   @override
   Widget build(BuildContext context) {
     final lang = AppLocalizations.of(context)!;
-    final AsyncValue student = widget.id != null
+    final AsyncValue student = widget.id != -1
         ? ref.watch(getStudentProvider(widget.id!))
         : AsyncData(null);
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.id == null ? lang.addStudent : lang.editStudent,
+        title: widget.id == -1 ? lang.addStudent : lang.editStudent,
       ),
       body: Form(
         key: _formKey,
         autovalidateMode: autoValidateMode,
         child: switch (student) {
+          /// Retry Mechanism is missing
           AsyncError(:final error) => Text('Error: $error'),
           AsyncData(:final value) => () {
-            if (value != null && _nameController.text.isEmpty) {
-              _prefillForm(value);
-            }
+            if (value != null) _prefillForm(value);
             return StudentForm(
               nameController: _nameController,
               marksController: _marksController,
               status: _status,
               onStatusChange: (value) {
-                setState(() {
-                  _status = value;
-                });
+                _status = value;
+                setState(() {});
               },
               grade: _grade,
               onGradeChange: (value) {
@@ -92,7 +90,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
                 setState(() {});
               },
               onSubmit: _onSubmit,
-              isEditing: widget.id != null,
+              isEditing: widget.id != -1,
             );
           }(),
           AsyncLoading() || _ => Center(child: CircularProgressIndicator()),
@@ -101,7 +99,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
     );
   }
 
-  void _onSubmit() {
+  void _onSubmit() async {
     final lang = AppLocalizations.of(context)!;
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) {
@@ -109,21 +107,24 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
       return;
     }
     final student = Student(
-      id: widget.id,
+      id: widget.id == -1 ? null : widget.id,
       name: _nameController.text.trim(),
       marks: double.parse(_marksController.text.trim()),
       status: _status,
       grade: _grade,
     );
 
-    widget.id == null
-        ? ref.read(createStudentProvider(student))
-        : ref.read(updateStudentProvider((student.id!, student)));
+    if (widget.id == -1) {
+      ref.read(createStudentProvider(student));
+    } else {
+      ref.read(updateStudentProvider((student.id!, student)));
+    }
+    if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          widget.id != null
+          widget.id != -1
               ? lang.updateStudentMessage
               : lang.createStudentMessage,
         ),
@@ -133,7 +134,6 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
       ),
     );
 
-    ref.invalidate(getStudentProvider);
     ref.invalidate(getStudentsProvider);
     context.pop();
   }
@@ -226,9 +226,9 @@ class StudentForm extends StatelessWidget {
               child: DropdownButtonFormField<Grade>(
                 initialValue: grade,
                 items: Grade.values
-                    .map(
-                      (g) => DropdownMenuItem(value: g, child: Text(g.value)),
-                    )
+                    .map((g) {
+                      return DropdownMenuItem(value: g, child: Text(g.value));
+                    })
                     .toList(growable: false),
                 onChanged: onGradeChange,
                 decoration: InputDecoration(

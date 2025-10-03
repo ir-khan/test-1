@@ -1,18 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../utils/enums.dart';
 
-class OrderModeNotifier extends Notifier<OrderMode> {
+part 'order_mode_provider.g.dart';
+
+@riverpod
+class ToggleOrderMode extends _$ToggleOrderMode {
   @override
-  OrderMode build() {
-    return OrderMode.asc;
-  }
+  OrderMode build() => OrderMode.asc;
 
-  void setLocale(OrderMode newMode) {
-    state = newMode;
-  }
+  void setOrder(OrderMode newMode) => state = newMode;
 }
-
-final orderModeProvider = NotifierProvider<OrderModeNotifier, OrderMode>(
-  OrderModeNotifier.new,
-);

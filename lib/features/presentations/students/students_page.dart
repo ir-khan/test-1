@@ -4,12 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
 import '../../../core/providers/locatization/locale_provider.dart';
-import '../../../core/providers/order_mode/order_mode_provider.dart';
 import '../../../core/providers/students/models/student.dart';
 import '../../../core/providers/students/provider/delete_student_provider.dart';
 import '../../../core/providers/students/provider/get_students_provider.dart';
 import '../../../router/routes.dart';
-import '../../../utils/enums.dart';
 import '../../../widgets/custom_app_bar.dart';
 import 'widgets/asc_desc_button.dart';
 
@@ -23,8 +21,7 @@ class StudentsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lang = AppLocalizations.of(context)!;
-    final orderMode = ref.watch(orderModeProvider);
-    final students = ref.watch(getStudentsProvider(orderMode));
+    final students = ref.watch(getStudentsProvider);
 
     return Scaffold(
       appBar: CustomAppBar(title: lang.students, actions: [AscDescButton()]),
@@ -35,28 +32,34 @@ class StudentsPage extends ConsumerWidget {
           FloatingActionButton(
             heroTag: 'locale_fab',
             onPressed: () {
-              final locale = ref.read(localeProvider);
+              final locale = ref.read(currentLocaleProvider);
               if (locale.languageCode == 'en') {
-                ref.read(localeProvider.notifier).setLocale(Locale('ur'));
+                ref
+                    .read(currentLocaleProvider.notifier)
+                    .setLocale(Locale('ur'));
               } else {
-                ref.read(localeProvider.notifier).setLocale(Locale('en'));
+                ref
+                    .read(currentLocaleProvider.notifier)
+                    .setLocale(Locale('en'));
               }
             },
             child: Icon(Icons.compare_arrows_rounded),
           ),
           FloatingActionButton(
             heroTag: 'add_student_fab',
-            onPressed: () => context.goNamed(AppRoutes.createStudent.name),
+            onPressed: () => context.goNamed(
+              AppRoutes.createStudent.name,
+              pathParameters: {AppParams.studentId: '-1'},
+            ),
             child: Icon(Icons.add_rounded),
           ),
         ],
       ),
       body: switch (students) {
+        /// Retry Mechanism is missing
         AsyncError(:final error) => Text('Error: $error'),
         AsyncData<List<Student>>(:final value) => () {
-          if (value.isEmpty) {
-            return Center(child: Text(lang.noStudents));
-          }
+          if (value.isEmpty) return Center(child: Text(lang.noStudents));
           return ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             itemBuilder: (_, i) {
@@ -82,12 +85,14 @@ class StudentsPage extends ConsumerWidget {
                     IconButton(
                       icon: Icon(Icons.edit_rounded),
                       color: Colors.green,
-                      onPressed: () => context.goNamed(
-                        AppRoutes.editStudent.name,
-                        pathParameters: {
-                          AppParams.studentId: student.id.toString(),
-                        },
-                      ),
+                      onPressed: () {
+                        context.goNamed(
+                          AppRoutes.createStudent.name,
+                          pathParameters: {
+                            AppParams.studentId: student.id.toString(),
+                          },
+                        );
+                      },
                     ),
                     IconButton(
                       icon: Icon(Icons.delete_rounded),
@@ -119,14 +124,12 @@ class StudentsPage extends ConsumerWidget {
             TextButton(
               onPressed: () {
                 ref.read(deleteStudentProvider(id));
-                ref.invalidate(
-                  getStudentsProvider(ref.read(orderModeProvider)),
-                );
+                ref.invalidate(getStudentsProvider);
                 context.pop();
               },
               child: Text(lang.yes),
             ),
-            TextButton(onPressed: () => context.pop(), child: Text(lang.no)),
+            TextButton(onPressed: context.pop, child: Text(lang.no)),
           ],
         );
       },

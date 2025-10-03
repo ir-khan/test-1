@@ -22,11 +22,6 @@ final routerConfigProvider = Provider((ref) {
             builder: CreateStudentPage.route,
           ),
           GoRoute(
-            path: AppRoutes.editStudent.path,
-            name: AppRoutes.editStudent.name,
-            builder: CreateStudentPage.route,
-          ),
-          GoRoute(
             path: AppRoutes.studentDetails.path,
             name: AppRoutes.studentDetails.name,
             builder: StudentDetailsPage.route,

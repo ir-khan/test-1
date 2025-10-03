@@ -15,7 +15,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: ref.watch(localeProvider),
+      locale: ref.watch(currentLocaleProvider),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lime),
       ),

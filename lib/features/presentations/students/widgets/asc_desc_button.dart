@@ -9,12 +9,12 @@ class AscDescButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orderMode = ref.watch(orderModeProvider);
+    final orderMode = ref.watch(toggleOrderModeProvider);
     return IconButton(
       onPressed: () {
         ref
-            .read(orderModeProvider.notifier)
-            .setLocale(
+            .read(toggleOrderModeProvider.notifier)
+            .setOrder(
               orderMode == OrderMode.asc ? OrderMode.desc : OrderMode.asc,
             );
       },

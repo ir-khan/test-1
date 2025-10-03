@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../utils/enums.dart';
 import 'tables/students.dart';
@@ -41,7 +42,7 @@ class AppDatabase extends _$AppDatabase {
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
-      name: 'test_1',
+      name: 'students',
       native: const DriftNativeOptions(
         databaseDirectory: getApplicationSupportDirectory,
       ),
@@ -49,4 +50,5 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
-final databaseProvider = Provider((ref) => AppDatabase());
+@riverpod
+AppDatabase database(Ref _) => AppDatabase();

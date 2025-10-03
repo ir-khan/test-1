@@ -1,8 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../utils/enums.dart';
 import '../../../database/app_database.dart' hide Student;
 import '../models/student.dart';
 import 'impl/student_repository_impl.dart';
+
+part 'student_repository.g.dart';
 
 abstract class StudentRepository {
   final AppDatabase database;
@@ -13,13 +16,14 @@ abstract class StudentRepository {
 
   Future<Student> getStudent(int id);
 
-  Stream<List<Student>> getStudents();
+  Stream<List<Student>> getStudents({OrderMode mode = OrderMode.asc});
 
   Future<int> updateStudent(int id, Student student);
 
   Future<int> deleteStudent(int id);
 }
 
-final studentRepositoryProvider = Provider(
-  (ref) => StudentRepositoryImpl(ref.read(databaseProvider)),
-);
+@riverpod
+StudentRepository studentRepository(Ref ref) {
+  return StudentRepositoryImpl(ref.read(databaseProvider));
+}

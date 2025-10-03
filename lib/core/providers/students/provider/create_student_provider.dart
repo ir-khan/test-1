@@ -1,11 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/student.dart';
 import '../repository/student_repository.dart';
 
-final createStudentProvider = FutureProvider.family<int, Student>((
-  Ref ref,
-  Student student,
-) async {
+part 'create_student_provider.g.dart';
+
+@riverpod
+Future<int> createStudent(Ref ref, Student student) async {
   return await ref.watch(studentRepositoryProvider).createStudent(student);
-});
+}
