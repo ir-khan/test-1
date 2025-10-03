@@ -77,6 +77,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
         key: _formKey,
         autovalidateMode: autoValidateMode,
         child: switch (student) {
+          AsyncLoading() => LoadingWidget(),
           AsyncError(:final error) => AppErrorWidget(
             error: error.toString(),
             onRetry: () => ref.refresh(getStudentProvider(widget.id!)),
@@ -104,7 +105,6 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
               isEditing: widget.id != -1,
             );
           }(),
-          AsyncLoading() || _ => LoadingWidget(),
         },
       ),
     );

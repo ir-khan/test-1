@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 
 import '../../../../utils/enums.dart';
 import '../../../database/app_database.dart';
-import '../../../database/tables/students.dart';
 import '../dto/student_dto.dart';
 
 class StudentDbSource {

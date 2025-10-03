@@ -26,6 +26,7 @@ class StudentDetailsPage extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(title: lang.studentDetails),
       body: switch (studentProvider) {
+        AsyncLoading() => LoadingWidget(),
         AsyncError(:final error) => AppErrorWidget(
           error: error.toString(),
           onRetry: () => ref.refresh(getStudentProvider(id)),
@@ -51,7 +52,6 @@ class StudentDetailsPage extends ConsumerWidget {
             ),
           );
         }(),
-        AsyncLoading() || _ => LoadingWidget(),
       },
     );
   }

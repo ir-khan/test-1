@@ -59,6 +59,7 @@ class StudentsPage extends ConsumerWidget {
         ],
       ),
       body: switch (students) {
+        AsyncLoading() => LoadingWidget(),
         AsyncError(:final error) => AppErrorWidget(
           error: error.toString(),
           onRetry: () => ref.refresh(getStudentsProvider),
@@ -90,7 +91,6 @@ class StudentsPage extends ConsumerWidget {
             itemCount: value.length,
           );
         }(),
-        AsyncLoading() || _ => LoadingWidget(),
       },
     );
   }
