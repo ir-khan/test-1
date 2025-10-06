@@ -41,9 +41,7 @@ class AppDatabase extends _$AppDatabase {
           await m.alterTable(
             TableMigration(
               students,
-              columnTransformer: {
-                students.marks: students.marks.cast<int>(),
-              },
+              columnTransformer: {students.marks: students.marks.cast<int>()},
             ),
           );
           await m.createTable(departments);

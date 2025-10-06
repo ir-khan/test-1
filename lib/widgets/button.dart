@@ -8,9 +8,6 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      child: Text(label, style: TextStyle(fontSize: 18)),
-    );
+    return ElevatedButton(onPressed: onTap, child: Text(label));
   }
 }

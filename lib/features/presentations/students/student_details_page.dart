@@ -65,17 +65,12 @@ class DetailsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-        ),
-        Text(
-          value,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-        ),
+        Text(label, style: textTheme.titleMedium),
+        Text(value, style: textTheme.bodyMedium),
       ],
     );
   }

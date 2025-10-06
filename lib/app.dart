@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'base/l10n/app_localizations.dart';
 import 'core/providers/localization/locale_provider.dart';
 import 'router/router.dart';
+import 'theme/theme.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -16,9 +17,7 @@ class MyApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: ref.watch(currentLocaleProvider),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lime),
-      ),
+      theme: appTheme,
       routerConfig: ref.watch(routerConfigProvider),
     );
   }

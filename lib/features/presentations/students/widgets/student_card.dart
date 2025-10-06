@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../theme/colors.dart';
+
 class StudentCard extends StatelessWidget {
   const StudentCard({
     super.key,
@@ -16,26 +18,24 @@ class StudentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return ListTile(
       visualDensity: VisualDensity.compact,
       contentPadding: EdgeInsets.symmetric(horizontal: 10),
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      title: Text(
-        name,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-      ),
+      title: Text(name, style: textTheme.bodySmall),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             icon: Icon(Icons.edit_rounded),
-            color: Colors.green,
+            color: AppColors.green,
             onPressed: onEditTap,
           ),
           IconButton(
             icon: Icon(Icons.delete_rounded),
-            color: Colors.red,
+            color: AppColors.red,
             onPressed: onDeleteTap,
           ),
         ],

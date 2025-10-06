@@ -179,6 +179,7 @@ class StudentForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     final lang = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
@@ -242,10 +243,7 @@ class StudentForm extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    lang.status,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                  ),
+                  Text(lang.status, style: textTheme.titleSmall),
                   CupertinoSwitch(value: status, onChanged: onStatusChange),
                 ],
               ),

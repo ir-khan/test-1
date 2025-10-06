@@ -8,17 +8,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     final colorScheme = ColorScheme.of(context);
     return AppBar(
       backgroundColor: colorScheme.surfaceContainerHighest,
       surfaceTintColor: colorScheme.surfaceTint,
       title: Text(
         title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 28,
-          color: colorScheme.onSurface,
-        ),
+        style: textTheme.displayMedium?.copyWith(color: colorScheme.onSurface),
       ),
       actions: actions,
     );
