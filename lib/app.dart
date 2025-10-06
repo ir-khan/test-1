@@ -17,7 +17,7 @@ class MyApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: ref.watch(currentLocaleProvider),
-      theme: appTheme,
+      theme: ref.watch(appThemeProvider),
       routerConfig: ref.watch(routerConfigProvider),
     );
   }
