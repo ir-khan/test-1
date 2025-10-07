@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/enums.dart';
+import '../../../../../utils/enums.dart';
 
 part 'order_mode_provider.g.dart';
 

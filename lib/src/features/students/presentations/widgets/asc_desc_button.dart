@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/providers/order_mode/order_mode_provider.dart';
+import '../provider/order_mode/order_mode_provider.dart';
 import '../../../../utils/enums.dart';
 
 class AscDescButton extends ConsumerWidget {

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
-import '../../../core/providers/localization/locale_provider.dart';
+import '../../../core/localization/locale_provider.dart';
 import '../data/models/student.dart';
 import 'provider/delete_student_provider.dart';
 import 'provider/get_students_provider.dart';
