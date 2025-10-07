@@ -12,6 +12,9 @@ final border = OutlineInputBorder(
 final appInputDecoration = InputDecorationThemeData(
   hintStyle: appText.labelSmall,
   border: border,
+  errorBorder: border.copyWith(
+    borderSide: BorderSide(color: appColorScheme.error),
+  ),
   focusedBorder: border,
   enabledBorder: border,
   contentPadding: kPadding16,

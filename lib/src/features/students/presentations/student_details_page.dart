@@ -39,6 +39,7 @@ class StudentDetailsPage extends ConsumerWidget {
               spacing: kSpacing10,
               children: [
                 DetailsRow(label: lang.name, value: value.name),
+                DetailsRow(label: lang.age, value: value.age == 0 ? 'Update Age' : value.age.toString()),
                 DetailsRow(label: lang.fatherName, value: value.fatherName),
                 DetailsRow(
                   label: lang.marks,

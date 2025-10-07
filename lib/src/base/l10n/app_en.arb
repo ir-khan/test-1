@@ -26,5 +26,8 @@
     "fatherName": "Father Name",
     "fatherNameErrorMessage": "Enter father name.",
     "retry": "Retry",
-    "gradeErrorMessage": "Select any grade."
+    "gradeErrorMessage": "Select any grade.",
+    "age": "Age",
+    "ageErrorMessage1": "Enter student age.",
+    "ageErrorMessage2": "Enter a age (1-120)."
 }

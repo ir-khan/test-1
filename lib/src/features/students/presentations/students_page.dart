@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
 import '../../../core/localization/locale_provider.dart';
+import '../../../widgets/confirmation_dialog.dart';
 import '../data/models/student.dart';
 import 'provider/delete_student_provider.dart';
 import 'provider/get_students_provider.dart';
@@ -85,7 +86,18 @@ class StudentsPage extends ConsumerWidget {
                     },
                   );
                 },
-                onDeleteTap: () => _onDelete(context, ref, student.id!),
+                onDeleteTap: () async {
+                  final result = await ConfirmationDialog(
+                    title: lang.alert,
+                    description: lang.deleteAlertText,
+                    okText: lang.yes,
+                    cancelText: lang.no,
+                  ).show(context);
+
+                  if (!result) return;
+                  ref.read(deleteStudentProvider(student.id!));
+                  ref.invalidate(getStudentsProvider);
+                },
               );
             },
             separatorBuilder: (_, _) => kSizedBoxH15,
@@ -96,27 +108,28 @@ class StudentsPage extends ConsumerWidget {
     );
   }
 
-  void _onDelete(BuildContext context, WidgetRef ref, int id) {
-    final lang = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(lang.alert),
-          content: Text(lang.deleteAlertText),
-          actions: [
-            TextButton(
-              onPressed: () {
-                ref.read(deleteStudentProvider(id));
-                ref.invalidate(getStudentsProvider);
-                context.pop();
-              },
-              child: Text(lang.yes),
-            ),
-            TextButton(onPressed: context.pop, child: Text(lang.no)),
-          ],
-        );
-      },
-    );
-  }
+  /// Replaced with ConfirmationDialog
+  // void _onDelete(BuildContext context, WidgetRef ref, int id) {
+  //   final lang = AppLocalizations.of(context)!;
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: Text(lang.alert),
+  //         content: Text(lang.deleteAlertText),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               ref.read(deleteStudentProvider(id));
+  //               ref.invalidate(getStudentsProvider);
+  //               context.pop();
+  //             },
+  //             child: Text(lang.yes),
+  //           ),
+  //           TextButton(onPressed: context.pop, child: Text(lang.no)),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

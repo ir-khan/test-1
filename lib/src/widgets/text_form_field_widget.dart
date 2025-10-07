@@ -7,12 +7,14 @@ class TextFormFieldWidget extends StatelessWidget {
     required this.hintText,
     this.validator,
     this.keyboardType,
+    this.textInputAction,
   });
 
   final TextEditingController controller;
   final String hintText;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class TextFormFieldWidget extends StatelessWidget {
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
       style: textTheme.labelMedium,
       decoration: InputDecoration(hintText: hintText),
     );

@@ -4,6 +4,7 @@ import '../mixins/table_mixin.dart';
 
 class Students extends Table with TableMixin {
   TextColumn get name => text()();
+  IntColumn get age => integer()();
   IntColumn get marks => integer()();
   BoolColumn get status => boolean()();
   TextColumn get grade =>

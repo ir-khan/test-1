@@ -20,6 +20,11 @@ enum Grade {
   static Grade fromString(String value) {
     return Grade.values.firstWhere((g) => g.value == value);
   }
+
+  @override
+  String toString() {
+    return value;
+  }
 }
 
 enum OrderMode { asc, desc }

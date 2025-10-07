@@ -1,2 +1,2 @@
-arb-dir: lib/base/l10n
-output-dir: lib/base/l10n
+arb-dir: lib/src/base/l10n
+output-dir: lib/src/base/l10n

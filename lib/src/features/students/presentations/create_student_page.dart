@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
+import '../../../constants/sizes.dart';
+import '../../../theme/colors.dart';
 import '../data/models/student.dart';
 import 'provider/create_student_provider.dart';
 import 'provider/get_student_provider.dart';
@@ -35,6 +37,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _marksController;
+  late final TextEditingController _ageController;
   late final TextEditingController _fatherNameController;
   AutovalidateMode autoValidateMode = AutovalidateMode.disabled;
   bool _status = false;
@@ -45,12 +48,14 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
     super.initState();
     _nameController = TextEditingController();
     _marksController = TextEditingController();
+    _ageController = TextEditingController();
     _fatherNameController = TextEditingController();
   }
 
   void _prefillForm(Student student) {
     _nameController.text = student.name;
     _marksController.text = student.marks.toString();
+    _ageController.text = student.age.toString();
     _fatherNameController.text = student.fatherName;
     _status = student.status;
     _grade = student.grade;
@@ -60,6 +65,8 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
   void dispose() {
     _nameController.dispose();
     _marksController.dispose();
+    _ageController.dispose();
+    _fatherNameController.dispose();
     super.dispose();
   }
 
@@ -89,6 +96,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
             return StudentForm(
               nameController: _nameController,
               marksController: _marksController,
+              ageController: _ageController,
               fatherNameController: _fatherNameController,
               status: _status,
               onStatusChange: (value) {
@@ -120,6 +128,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
     final student = Student(
       id: widget.id == -1 ? null : widget.id,
       name: _nameController.text.trim(),
+      age: int.parse(_ageController.text.trim()),
       marks: int.parse(_marksController.text.trim()),
       status: _status,
       grade: _grade,
@@ -139,10 +148,14 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
           widget.id != -1
               ? lang.updateStudentMessage
               : lang.createStudentMessage,
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(color: AppColors.white),
         ),
         duration: Duration(milliseconds: 1500),
         margin: EdgeInsets.all(20),
         behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: kRadius10),
       ),
     );
 
@@ -158,6 +171,7 @@ class StudentForm extends StatelessWidget {
     super.key,
     required this.nameController,
     required this.marksController,
+    required this.ageController,
     required this.fatherNameController,
     required this.status,
     required this.onStatusChange,
@@ -169,6 +183,7 @@ class StudentForm extends StatelessWidget {
 
   final TextEditingController nameController;
   final TextEditingController marksController;
+  final TextEditingController ageController;
   final TextEditingController fatherNameController;
   final bool status;
   final void Function(bool) onStatusChange;
@@ -192,6 +207,7 @@ class StudentForm extends StatelessWidget {
               child: TextFormFieldWidget(
                 controller: nameController,
                 hintText: lang.name,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return lang.nameErrorMessage;
@@ -205,9 +221,32 @@ class StudentForm extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 10),
             sliver: SliverToBoxAdapter(
               child: TextFormFieldWidget(
+                controller: ageController,
+                hintText: lang.age,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return lang.ageErrorMessage1;
+                  }
+                  if (!RegExp(
+                    r'^(?:[1-9]|[1-9][0-9]|1[01][0-9]|120)$',
+                  ).hasMatch(value)) {
+                    return lang.ageErrorMessage2;
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            sliver: SliverToBoxAdapter(
+              child: TextFormFieldWidget(
                 controller: marksController,
                 hintText: lang.marks,
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return lang.marksErrorMessage1;
@@ -255,7 +294,6 @@ class StudentForm extends StatelessWidget {
               child: DropdownFormFieldWidget<Grade>(
                 initialValue: grade,
                 items: Grade.values,
-                itemLabel: (g) => g.value,
                 onChange: onGradeChange,
                 validator: (value) {
                   if (value == null || value == Grade.notGraded) {

@@ -73,6 +73,7 @@ extension StudentDTOConverter on Student {
       id: id,
       name: name,
       marks: marks,
+      age: age,
       status: status,
       grade: grade,
       fatherName: fatherName,
