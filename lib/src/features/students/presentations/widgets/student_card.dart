@@ -22,7 +22,7 @@ class StudentCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return ListTile(
       visualDensity: VisualDensity.compact,
-      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+      contentPadding: kPaddingH10,
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: kRadius10),
       title: Text(name, style: textTheme.bodySmall),
