@@ -66,7 +66,7 @@ class StudentsPage extends ConsumerWidget {
         AsyncData<List<Student>>(:final value) => () {
           if (value.isEmpty) return Center(child: Text(lang.noStudents));
           return ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: kPaddingH20V10,
             itemBuilder: (_, i) {
               final student = value[i];
               return StudentCard(

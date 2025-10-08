@@ -32,7 +32,7 @@ class StudentDetailsPage extends ConsumerWidget {
         ),
         AsyncData<Student>(:final value) => () {
           return Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kPadding20,
             child: Column(
               spacing: kSpacing10,
               children: [
