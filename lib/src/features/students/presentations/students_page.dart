@@ -4,15 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
 import '../../../core/localization/locale_provider.dart';
-import '../../../widgets/confirmation_dialog.dart';
+import '../../../shared/widgets/widgets.dart';
 import '../data/models/student.dart';
 import 'provider/delete_student_provider.dart';
 import 'provider/get_students_provider.dart';
 import '../../../router/routes.dart';
 import '../../../constants/sizes.dart';
-import '../../../widgets/app_error_widget.dart';
-import '../../../widgets/custom_app_bar.dart';
-import '../../../widgets/loading_widget.dart';
 import 'widgets/asc_desc_button.dart';
 import 'widgets/student_card.dart';
 

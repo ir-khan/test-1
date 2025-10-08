@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
 import '../../../constants/sizes.dart';
+import '../../../shared/widgets/widgets.dart';
 import '../../../theme/colors.dart';
 import '../data/models/student.dart';
 import 'provider/create_student_provider.dart';
@@ -13,12 +14,6 @@ import 'provider/get_students_provider.dart';
 import 'provider/update_student_provider.dart';
 import '../../../router/routes.dart';
 import '../../../utils/enums.dart';
-import '../../../widgets/app_error_widget.dart';
-import '../../../widgets/button.dart';
-import '../../../widgets/custom_app_bar.dart';
-import '../../../widgets/dropdown_form_field_widget.dart';
-import '../../../widgets/loading_widget.dart';
-import '../../../widgets/text_form_field_widget.dart';
 
 class CreateStudentPage extends ConsumerStatefulWidget {
   CreateStudentPage.route(

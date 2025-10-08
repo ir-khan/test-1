@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
+import '../../../shared/widgets/widgets.dart';
 import '../data/models/student.dart';
 import 'provider/get_student_provider.dart';
 import '../../../router/routes.dart';
 import '../../../constants/sizes.dart';
-import '../../../widgets/app_error_widget.dart';
-import '../../../widgets/custom_app_bar.dart';
-import '../../../widgets/loading_widget.dart';
 
 class StudentDetailsPage extends ConsumerWidget {
   StudentDetailsPage.route(
@@ -39,7 +37,10 @@ class StudentDetailsPage extends ConsumerWidget {
               spacing: kSpacing10,
               children: [
                 DetailsRow(label: lang.name, value: value.name),
-                DetailsRow(label: lang.age, value: value.age == 0 ? 'Update Age' : value.age.toString()),
+                DetailsRow(
+                  label: lang.age,
+                  value: value.age == 0 ? 'Update Age' : value.age.toString(),
+                ),
                 DetailsRow(label: lang.fatherName, value: value.fatherName),
                 DetailsRow(
                   label: lang.marks,
