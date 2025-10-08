@@ -9,6 +9,7 @@ import '../../../router/routes.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../../theme/colors.dart';
 import '../../../utils/enums.dart';
+import '../../../utils/validators.dart';
 import '../data/models/student.dart';
 import 'provider/create_student_provider.dart';
 import 'provider/get_student_provider.dart';
@@ -148,7 +149,7 @@ class _CreateStudentPageState extends ConsumerState<CreateStudentPage> {
           ).textTheme.labelMedium?.copyWith(color: AppColors.white),
         ),
         duration: Duration(milliseconds: 1500),
-        margin: EdgeInsets.all(20),
+        margin: kPadding20,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: kRadius10),
       ),
@@ -191,125 +192,118 @@ class StudentForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final lang = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-      child: CustomScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: TextFormFieldWidget(
-                controller: nameController,
-                hintText: lang.name,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return lang.nameErrorMessage;
-                  }
-                  return null;
-                },
-              ),
+    return CustomScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      slivers: [
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: TextFormFieldWidget(
+              controller: nameController,
+              hintText: lang.name,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return lang.nameErrorMessage;
+                }
+                return null;
+              },
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: TextFormFieldWidget(
-                controller: ageController,
-                hintText: lang.age,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return lang.ageErrorMessage1;
-                  }
-                  if (!RegExp(
-                    r'^(?:[1-9]|[1-9][0-9]|1[01][0-9]|120)$',
-                  ).hasMatch(value)) {
-                    return lang.ageErrorMessage2;
-                  }
-                  return null;
-                },
-              ),
+        ),
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: TextFormFieldWidget(
+              controller: ageController,
+              hintText: lang.age,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return lang.ageErrorMessage1;
+                }
+                if (!ageValidator.hasMatch(value)) {
+                  return lang.ageErrorMessage2;
+                }
+                return null;
+              },
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: TextFormFieldWidget(
-                controller: marksController,
-                hintText: lang.marks,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return lang.marksErrorMessage1;
-                  }
-                  if (!RegExp(
-                    r'^(100(?:\.0+)?|[0-9]?\d(?:\.\d+)?|\.\d+)$',
-                  ).hasMatch(value)) {
-                    return lang.marksErrorMessage2;
-                  }
-                  return null;
-                },
-              ),
+        ),
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: TextFormFieldWidget(
+              controller: marksController,
+              hintText: lang.marks,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return lang.marksErrorMessage1;
+                }
+                if (!marksValidator.hasMatch(value)) {
+                  return lang.marksErrorMessage2;
+                }
+                return null;
+              },
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: TextFormFieldWidget(
-                controller: fatherNameController,
-                hintText: lang.fatherName,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return lang.fatherNameErrorMessage;
-                  }
-                  return null;
-                },
-              ),
+        ),
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: TextFormFieldWidget(
+              controller: fatherNameController,
+              hintText: lang.fatherName,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return lang.fatherNameErrorMessage;
+                }
+                return null;
+              },
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(lang.status, style: textTheme.titleSmall),
-                  CupertinoSwitch(value: status, onChanged: onStatusChange),
-                ],
-              ),
+        ),
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(lang.status, style: textTheme.titleSmall),
+                CupertinoSwitch(value: status, onChanged: onStatusChange),
+              ],
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: DropdownFormFieldWidget<Grade>(
-                initialValue: grade,
-                items: Grade.values,
-                onChange: onGradeChange,
-                validator: (value) {
-                  if (value == null || value == Grade.notGraded) {
-                    return lang.gradeErrorMessage;
-                  }
-                  return null;
-                },
-              ),
+        ),
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: DropdownFormFieldWidget<Grade>(
+              initialValue: grade,
+              items: Grade.values,
+              onChange: onGradeChange,
+              validator: (value) {
+                if (value == null || value == Grade.notGraded) {
+                  return lang.gradeErrorMessage;
+                }
+                return null;
+              },
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            sliver: SliverToBoxAdapter(
-              child: Button(
-                label: isEditing ? lang.update : lang.create,
-                onTap: onSubmit,
-              ),
+        ),
+        SliverPadding(
+          padding: kPaddingH20V10,
+          sliver: SliverToBoxAdapter(
+            child: Button(
+              label: isEditing ? lang.update : lang.create,
+              onTap: onSubmit,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
