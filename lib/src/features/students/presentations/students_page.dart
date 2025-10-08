@@ -1,22 +1,25 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
-import '../../../core/localization/locale_provider.dart';
-import '../../../widgets/confirmation_dialog.dart';
-import '../data/models/student.dart';
-import 'provider/delete_student_provider.dart';
-import 'provider/get_students_provider.dart';
-import '../../../router/routes.dart';
 import '../../../constants/sizes.dart';
+import '../../../core/localization/locale_provider.dart';
+import '../../../router/routes.dart';
 import '../../../widgets/app_error_widget.dart';
+import '../../../widgets/confirmation_dialog.dart';
 import '../../../widgets/custom_app_bar.dart';
 import '../../../widgets/loading_widget.dart';
+import '../data/models/student.dart';
+import '../data/repository/student_repository.dart';
+import 'provider/delete_student_provider.dart';
+import 'provider/get_students_provider.dart';
 import 'widgets/asc_desc_button.dart';
 import 'widgets/student_card.dart';
 
-class StudentsPage extends ConsumerWidget {
+class StudentsPage extends ConsumerStatefulWidget {
   const StudentsPage.route(
     BuildContext context,
     GoRouterState state, {
@@ -24,7 +27,14 @@ class StudentsPage extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StudentsPage> createState() => _StudentsPageState();
+}
+
+class _StudentsPageState extends ConsumerState<StudentsPage> {
+  final _scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
     final lang = AppLocalizations.of(context)!;
     final students = ref.watch(getStudentsProvider);
 
@@ -52,10 +62,15 @@ class StudentsPage extends ConsumerWidget {
           ),
           FloatingActionButton(
             heroTag: 'add_student_fab',
-            onPressed: () => context.goNamed(
-              AppRoutes.createStudent.name,
-              pathParameters: {AppParams.studentId: 'new'},
-            ),
+            onPressed: () async {
+              await ref
+                  .read(studentRepositoryProvider)
+                  .storeBatchStudentRecords();
+              // context.goNamed(
+              //   AppRoutes.createStudent.name,
+              //   pathParameters: {AppParams.studentId: 'new'},
+              // );
+            },
             child: Icon(Icons.add_rounded),
           ),
         ],
@@ -68,7 +83,18 @@ class StudentsPage extends ConsumerWidget {
         ),
         AsyncData<List<Student>>(:final value) => () {
           if (value.isEmpty) return Center(child: Text(lang.noStudents));
+          log('Total : ${value.length}');
+          Future.delayed(const Duration(seconds: 1), () {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: Duration(seconds: 2),
+                curve: Curves.easeOut,
+              );
+            });
+          });
           return ListView.separated(
+            controller: _scrollController,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             itemBuilder: (_, i) {
               final student = value[i];
@@ -107,29 +133,4 @@ class StudentsPage extends ConsumerWidget {
       },
     );
   }
-
-  /// Replaced with ConfirmationDialog
-  // void _onDelete(BuildContext context, WidgetRef ref, int id) {
-  //   final lang = AppLocalizations.of(context)!;
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: Text(lang.alert),
-  //         content: Text(lang.deleteAlertText),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               ref.read(deleteStudentProvider(id));
-  //               ref.invalidate(getStudentsProvider);
-  //               context.pop();
-  //             },
-  //             child: Text(lang.yes),
-  //           ),
-  //           TextButton(onPressed: context.pop, child: Text(lang.no)),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }

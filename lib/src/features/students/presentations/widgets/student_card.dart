@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../theme/colors.dart';
 import '../../../../constants/sizes.dart';
+import '../../../../theme/colors.dart';
 
 class StudentCard extends StatelessWidget {
   const StudentCard({
@@ -24,6 +24,11 @@ class StudentCard extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       contentPadding: EdgeInsets.symmetric(horizontal: 10),
       onTap: onTap,
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(
+          'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE=',
+        ),
+      ),
       shape: RoundedRectangleBorder(borderRadius: kRadius10),
       title: Text(name, style: textTheme.bodySmall),
       trailing: Row(

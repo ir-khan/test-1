@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../utils/enums.dart';
 import '../../../../core/database/app_database.dart' hide Student;
+import '../../../../utils/enums.dart';
 import '../models/student.dart';
 import 'impl/student_repository_impl.dart';
 
@@ -21,6 +21,8 @@ abstract class StudentRepository {
   Future<int> updateStudent(int id, Student student);
 
   Future<int> deleteStudent(int id);
+
+  Future<void> storeBatchStudentRecords();
 }
 
 @riverpod

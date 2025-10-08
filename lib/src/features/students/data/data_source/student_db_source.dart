@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:drift/drift.dart';
 
-import '../../../../utils/enums.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../utils/enums.dart';
 import '../dto/student_dto.dart';
 
 class StudentDbSource {
@@ -63,6 +65,26 @@ class StudentDbSource {
       )..where((s) => s.id.equals(id))).go();
     } catch (_) {
       rethrow;
+    }
+  }
+
+  Future<void> storeBatchStudentRecords() async {
+    for (var i = 0; i < 10000000; i++) {
+      try {
+        log('Inserting $i record');
+        createStudent(
+          StudentDto(
+            name: 'Student ${i + 1}',
+            marks: i,
+            age: i % 20,
+            status: i % 2 == 0,
+            grade: i % 2 == 0 ? Grade.a : Grade.aPlus,
+            fatherName: 'FatherName : ${i + 1}',
+          ),
+        );
+      } catch (e) {
+        log('Exception : $e');
+      }
     }
   }
 }

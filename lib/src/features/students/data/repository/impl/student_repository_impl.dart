@@ -37,4 +37,9 @@ class StudentRepositoryImpl extends StudentRepository {
   Future<int> deleteStudent(int id) async {
     return _source.deleteStudent(id);
   }
+
+  @override
+  Future<void> storeBatchStudentRecords() async {
+    await _source.storeBatchStudentRecords();
+  }
 }
