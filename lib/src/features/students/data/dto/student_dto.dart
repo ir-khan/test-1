@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart' hide JsonKey;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../utils/enums.dart';
 import '../../../../core/database/app_database.dart' as db;
+import '../../../../utils/enums.dart';
 import '../models/student.dart';
 
 part 'student_dto.freezed.dart';

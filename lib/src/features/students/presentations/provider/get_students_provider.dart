@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'order_mode/order_mode_provider.dart';
 import '../../data/models/student.dart';
 import '../../data/repository/student_repository.dart';
+import 'order_mode/order_mode_provider.dart';
 
 part 'get_students_provider.g.dart';
 

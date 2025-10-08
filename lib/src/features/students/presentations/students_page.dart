@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
+import '../../../constants/sizes.dart';
 import '../../../core/localization/locale_provider.dart';
+import '../../../router/routes.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../data/models/student.dart';
 import 'provider/delete_student_provider.dart';
 import 'provider/get_students_provider.dart';
-import '../../../router/routes.dart';
-import '../../../constants/sizes.dart';
 import 'widgets/asc_desc_button.dart';
 import 'widgets/student_card.dart';
 

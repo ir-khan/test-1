@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../theme/colors.dart';
 import '../../../../constants/sizes.dart';
+import '../../../../theme/colors.dart';
 
 class StudentCard extends StatelessWidget {
   const StudentCard({

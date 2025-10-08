@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
+import '../../../constants/sizes.dart';
+import '../../../router/routes.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../data/models/student.dart';
 import 'provider/get_student_provider.dart';
-import '../../../router/routes.dart';
-import '../../../constants/sizes.dart';
 
 class StudentDetailsPage extends ConsumerWidget {
   StudentDetailsPage.route(

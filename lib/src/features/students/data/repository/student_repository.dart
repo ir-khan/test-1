@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../utils/enums.dart';
 import '../../../../core/database/app_database.dart' hide Student;
+import '../../../../utils/enums.dart';
 import '../models/student.dart';
 import 'impl/student_repository_impl.dart';
 

@@ -5,15 +5,15 @@ import 'package:go_router/go_router.dart';
 
 import '../../../base/l10n/app_localizations.dart';
 import '../../../constants/sizes.dart';
+import '../../../router/routes.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../../theme/colors.dart';
+import '../../../utils/enums.dart';
 import '../data/models/student.dart';
 import 'provider/create_student_provider.dart';
 import 'provider/get_student_provider.dart';
 import 'provider/get_students_provider.dart';
 import 'provider/update_student_provider.dart';
-import '../../../router/routes.dart';
-import '../../../utils/enums.dart';
 
 class CreateStudentPage extends ConsumerStatefulWidget {
   CreateStudentPage.route(
