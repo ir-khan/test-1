@@ -32,6 +32,18 @@ class StudentsPage extends ConsumerStatefulWidget {
 
 class _StudentsPageState extends ConsumerState<StudentsPage> {
   final _scrollController = ScrollController();
+  int cursor = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        ref.read(getStudentsProvider.notifier).getNext(cursor);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +96,16 @@ class _StudentsPageState extends ConsumerState<StudentsPage> {
         AsyncData<List<Student>>(:final value) => () {
           if (value.isEmpty) return Center(child: Text(lang.noStudents));
           log('Total : ${value.length}');
-          Future.delayed(const Duration(seconds: 1), () {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: Duration(seconds: 2),
-                curve: Curves.easeOut,
-              );
-            });
-          });
+          // Future.delayed(const Duration(seconds: 1), () {
+          //   WidgetsBinding.instance.addPostFrameCallback((_) {
+          //     _scrollController.animateTo(
+          //       _scrollController.position.maxScrollExtent,
+          //       duration: Duration(seconds: 2),
+          //       curve: Curves.easeOut,
+          //     );
+          //   });
+          // });
+          cursor = value.last.id!;
           return ListView.separated(
             controller: _scrollController,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

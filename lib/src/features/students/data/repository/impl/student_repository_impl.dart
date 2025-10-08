@@ -20,9 +20,13 @@ class StudentRepositoryImpl extends StudentRepository {
   }
 
   @override
-  Stream<List<Student>> getStudents({OrderMode mode = OrderMode.asc}) {
+  Stream<List<Student>> getStudents({
+    required int cursor,
+    int limit = 20,
+    OrderMode mode = OrderMode.asc,
+  }) {
     return _source
-        .getStudents(mode: mode)
+        .getStudents(cursor: cursor, limit: limit, mode: mode)
         .map(
           (students) => students.map((student) => student.toModel()).toList(),
         );

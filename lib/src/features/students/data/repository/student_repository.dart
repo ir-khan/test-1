@@ -16,7 +16,11 @@ abstract class StudentRepository {
 
   Future<Student> getStudent(int id);
 
-  Stream<List<Student>> getStudents({OrderMode mode = OrderMode.asc});
+  Stream<List<Student>> getStudents({
+    required int cursor,
+    int limit = 20,
+    OrderMode mode = OrderMode.asc,
+  });
 
   Future<int> updateStudent(int id, Student student);
 

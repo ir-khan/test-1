@@ -30,17 +30,24 @@ class StudentDbSource {
     }
   }
 
-  Stream<List<StudentDto>> getStudents({OrderMode mode = OrderMode.asc}) {
+  Stream<List<StudentDto>> getStudents({
+    required int cursor,
+    int limit = 20,
+    OrderMode mode = OrderMode.asc,
+  }) {
     try {
-      return (database.select(database.students)..orderBy([
-            (s) => OrderingTerm(
-              expression: s.id,
-              mode: switch (mode) {
-                OrderMode.asc => OrderingMode.asc,
-                OrderMode.desc => OrderingMode.desc,
-              },
-            ),
-          ]))
+      return (database.select(database.students)
+            ..orderBy([
+              (s) => OrderingTerm(
+                expression: s.id,
+                mode: switch (mode) {
+                  OrderMode.asc => OrderingMode.asc,
+                  OrderMode.desc => OrderingMode.desc,
+                },
+              ),
+            ])
+            ..where((s) => s.id.isBiggerThanValue(cursor))
+            ..limit(limit))
           .watch()
           .map((students) => students.map((s) => s.toDto()).toList());
     } catch (_) {
@@ -69,7 +76,7 @@ class StudentDbSource {
   }
 
   Future<void> storeBatchStudentRecords() async {
-    for (var i = 0; i < 10000000; i++) {
+    for (var i = 30000; i < 45000; i++) {
       try {
         log('Inserting $i record');
         createStudent(
