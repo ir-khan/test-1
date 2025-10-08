@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../base/l10n/app_localizations.dart';
+import '../../base/l10n/app_localizations.dart';
 import 'button.dart';
 
 class AppErrorWidget extends StatelessWidget {
