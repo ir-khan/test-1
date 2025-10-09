@@ -13,7 +13,7 @@ import '../../../widgets/confirmation_dialog.dart';
 import '../../../widgets/custom_app_bar.dart';
 import '../../../widgets/loading_widget.dart';
 import '../data/models/student.dart';
-import '../data/repository/student_repository.dart';
+import '../data/repository/student/student_repository.dart';
 import 'provider/delete_student_provider.dart';
 import 'provider/get_students_provider.dart';
 import 'widgets/asc_desc_button.dart';
@@ -32,21 +32,24 @@ class StudentsPage extends ConsumerStatefulWidget {
 
 class _StudentsPageState extends ConsumerState<StudentsPage> {
   final _scrollController = ScrollController();
-  int cursor = 0;
+  var cursor = 0;
+
+  void _paginationListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 40) {
+      ref.read(getStudentsProvider.notifier).getNext(cursor);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        ref.read(getStudentsProvider.notifier).getNext(cursor);
-      }
-    });
+    _scrollController.addListener(_paginationListener);
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_paginationListener);
     _scrollController.dispose();
     super.dispose();
   }
@@ -111,7 +114,7 @@ class _StudentsPageState extends ConsumerState<StudentsPage> {
           //     );
           //   });
           // });
-          cursor = value.last.id!;
+          cursor = value.last.id ?? 0;
           return ListView.separated(
             controller: _scrollController,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -141,7 +144,6 @@ class _StudentsPageState extends ConsumerState<StudentsPage> {
 
                   if (!result) return;
                   ref.read(deleteStudentProvider(student.id!));
-                  ref.invalidate(getStudentsProvider);
                 },
               );
             },

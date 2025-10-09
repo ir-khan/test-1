@@ -1,7 +1,7 @@
 import '../../../../../utils/enums.dart';
 import '../../data_source/student_db_source.dart';
 import '../../models/student.dart';
-import '../student_repository.dart';
+import 'student_repository.dart';
 
 class StudentRepositoryImpl extends StudentRepository {
   StudentRepositoryImpl(super.database);
@@ -25,11 +25,11 @@ class StudentRepositoryImpl extends StudentRepository {
     int limit = 20,
     OrderMode mode = OrderMode.asc,
   }) {
-    return _source
-        .getStudents(cursor: cursor, limit: limit, mode: mode)
-        .map(
-          (students) => students.map((student) => student.toModel()).toList(),
-        );
+    return _source.getStudents(cursor: cursor, limit: limit, mode: mode).map((
+      students,
+    ) {
+      return students.map((student) => student.toModel()).toList();
+    });
   }
 
   @override
