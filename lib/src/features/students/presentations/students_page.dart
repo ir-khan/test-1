@@ -46,6 +46,12 @@ class _StudentsPageState extends ConsumerState<StudentsPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final lang = AppLocalizations.of(context)!;
     final students = ref.watch(getStudentsProvider);

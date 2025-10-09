@@ -10,7 +10,7 @@ part 'get_students_provider.g.dart';
 class GetStudents extends _$GetStudents {
   int _cursor = 0;
 
-  late final _repository = ref.read(studentRepositoryProvider);
+  late final _repository = ref.watch(studentRepositoryProvider);
 
   @override
   Stream<List<Student>> build() {
